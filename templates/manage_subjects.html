@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Manage Subjects</h1>
+
+<form method="POST">
+    <div>
+        <label for="subject_initial">Subject Initial:</label>
+        <input type="text" id="subject_initial" name="subject_initial" placeholder="e.g., MATH" required>
+    </div>
+    <div>
+        <label for="subject_full_name">Subject Full Name:</label>
+        <input type="text" id="subject_full_name" name="subject_full_name" placeholder="e.g., Mathematics" required>
+    </div>
+    <button type="submit">Add Subject</button>
+</form>
+
+<h2>Existing Subjects</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Subject Initial</th>
+            <th>Subject Full Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for subject in subjects %}
+        <tr>
+            <td>{{ subject.subject_initial }}</td>
+            <td>{{ subject.subject_full_name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

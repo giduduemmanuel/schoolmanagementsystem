@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}Library Management - School Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-book"></i> Library Management</h2>
+        <p class="text-muted">Manage books and borrowing</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-plus"></i> Add New Book</h5>
+            </div>
+            <div class="card-body">
+                <form id="addBookForm">
+                    <div class="mb-3">
+                        <label class="form-label">Book Title</label>
+                        <input type="text" class="form-control" name="book_title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Author</label>
+                        <input type="text" class="form-control" name="author" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ISBN</label>
+                        <input type="text" class="form-control" name="isbn">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Non-Fiction">Non-Fiction</option>
+                            <option value="Textbook">Textbook</option>
+                            <option value="Reference">Reference</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Total Copies</label>
+                        <input type="number" class="form-control" name="total_copies" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="addBook()">
+                        <i class="fas fa-plus"></i> Add Book
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-list"></i> Book Inventory</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="booksTable">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Total</th>
+                                <th>Available</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Books will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-hand-holding"></i> Issue Book</h5>
+            </div>
+            <div class="card-body">
+                <form id="issueBookForm">
+                    <div class="mb-3">
+                        <label class="form-label">Student Number</label>
+                        <input type="number" class="form-control" name="std_no" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Class</label>
+                        <select class="form-select" name="class_level" required>
+                            <option value="">Select Class</option>
+                            <option value="S1">S1</option>
+                            <option value="S2">S2</option>
+                            <option value="S3">S3</option>
+                            <option value="S4">S4</option>
+                            <option value="S5">S5</option>
+                            <option value="S6">S6</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Book</label>
+                        <select class="form-select" name="book_id" required>
+                            <option value="">Select Book</option>
+                            <!-- Books will be loaded here -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Return Date</label>
+                        <input type="date" class="form-control" name="return_date" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="issueBook()">
+                        <i class="fas fa-hand-holding"></i> Issue Book
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-undo"></i> Return Book</h5>
+            </div>
+            <div class="card-body">
+                <form id="returnBookForm">
+                    <div class="mb-3">
+                        <label class="form-label">Student Number</label>
+                        <input type="number" class="form-control" name="std_no" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Borrowed Books</label>
+                        <select class="form-select" name="borrowing_id" required>
+                            <option value="">Select Book to Return</option>
+                            <!-- Borrowed books will be loaded here -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fine Amount (if any)</label>
+                        <input type="number" step="0.01" class="form-control" name="fine_amount" value="0">
+                    </div>
+                    <button type="button" class="btn btn-warning" onclick="returnBook()">
+                        <i class="fas fa-undo"></i> Return Book
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-bar"></i> Library Reports</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body text-center">
+                                <h3 id="totalBooks">0</h3>
+                                <p>Total Books</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h3 id="availableBooks">0</h3>
+                                <p>Available Books</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body text-center">
+                                <h3 id="borrowedBooks">0</h3>
+                                <p>Borrowed Books</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body text-center">
+                                <h3 id="overdueBooks">0</h3>
+                                <p>Overdue Books</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function addBook() {
+    const form = document.getElementById('addBookForm');
+    const formData = new FormData(form);
+    
+    // Here you would send the data to the server
+    alert('Book added successfully!');
+    form.reset();
+    loadBooks();
+}
+
+function issueBook() {
+    const form = document.getElementById('issueBookForm');
+    const formData = new FormData(form);
+    
+    // Here you would send the data to the server
+    alert('Book issued successfully!');
+    form.reset();
+    updateLibraryStats();
+}
+
+function returnBook() {
+    const form = document.getElementById('returnBookForm');
+    const formData = new FormData(form);
+    
+    // Here you would send the data to the server
+    alert('Book returned successfully!');
+    form.reset();
+    updateLibraryStats();
+}
+
+function loadBooks() {
+    // Here you would load books from the server
+    // For now, we'll show sample data
+    const tbody = document.querySelector('#booksTable tbody');
+    tbody.innerHTML = `
+        <tr>
+            <td>Mathematics Textbook</td>
+            <td>Emmanuel Gidudu</td>
+            <td>Textbook</td>
+            <td>50</td>
+            <td>45</td>
+            <td>
+                <button class="btn btn-sm btn-primary">Edit</button>
+                <button class="btn btn-sm btn-danger">Delete</button>
+            </td>
+        </tr>
+    `;
+}
+
+function updateLibraryStats() {
+    // Here you would load stats from the server
+    document.getElementById('totalBooks').textContent = '150';
+    document.getElementById('availableBooks').textContent = '120';
+    document.getElementById('borrowedBooks').textContent = '25';
+    document.getElementById('overdueBooks').textContent = '5';
+}
+
+// Load initial data
+document.addEventListener('DOMContentLoaded', function() {
+    loadBooks();
+    updateLibraryStats();
+});
+</script>
+{% endblock %}

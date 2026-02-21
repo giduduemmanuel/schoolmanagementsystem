@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}Report Card - School Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-file-alt"></i> Report Card Generation</h2>
+        <p class="text-muted">Generate student report cards</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Report Generation Controls</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" id="stdNoInput" placeholder="Student Number">
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="reportTypeSelect">
+                            <option value="BOT">BOT Report</option>
+                            <option value="MOT">MOT Report</option>
+                            <option value="EOT">EOT Report</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" id="printOneBtn">
+                            <i class="fas fa-print"></i> Print One
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-success" id="printAllBtn">
+                            <i class="fas fa-print"></i> Print All
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div id="reportCardContainer" class="d-none">
+            <!-- Report card will be generated here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const printOneBtn = document.getElementById('printOneBtn');
+    const printAllBtn = document.getElementById('printAllBtn');
+
+    printOneBtn.addEventListener('click', function() {
+        const stdNo = document.getElementById('stdNoInput').value;
+        const reportType = document.getElementById('reportTypeSelect').value;
+        
+        if (!stdNo) {
+            alert('Please enter a student number');
+            return;
+        }
+
+        // For now, we'll show a placeholder report card
+        generateReportCard(stdNo, reportType);
+    });
+
+    printAllBtn.addEventListener('click', function() {
+        const reportType = document.getElementById('reportTypeSelect').value;
+        alert('Print All functionality will generate reports for all students');
+    });
+});
+
+function generateReportCard(stdNo, reportType) {
+    const container = document.getElementById('reportCardContainer');
+    
+    // Sample report card HTML based on the provided template
+    const reportCardHTML = `
+        <div class="report-card" style="max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; font-size: 12px;">
+            <div class="header text-center mb-3">
+                <h4>COTN MARANI HONORS HIGH SCHOOL</h4>
+                <p>"For God, For Excellence"</p>
+                <p>P.O BOX 382 – LIRA (Uganda)</p>
+                <p>Tel: +256-200980011, 0782-252411/ 0761133362</p>
+                <p>cotn.maranihhs@gmail.com | www.cotnmaranihonorshs.com</p>
+            </div>
+            
+            <div class="student-info mb-3">
+                <div class="row">
+                    <div class="col-6">
+                        <p><strong>CARD NUMBER:</strong> ${stdNo}</p>
+                        <p><strong>STUDENT NAME:</strong> SAMPLE STUDENT</p>
+                        <p><strong>CLASS:</strong> S1WHITE</p>
+                    </div>
+                    <div class="col-6">
+                        <p><strong>SEX:</strong> F</p>
+                        <p><strong>TERM:</strong> II</p>
+                        <p><strong>YEAR:</strong> 2025</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="marks-table mb-3">
+                <table class="table table-bordered" style="font-size: 10px;">
+                    <thead>
+                        <tr>
+                            <th>SUBJECTS</th>
+                            ${reportType === 'EOT' ? '<th>C1</th><th>C2</th><th>C3</th><th>C4</th><th>AV</th><th>20%</th><th>80%</th><th>100%</th><th>Ident</th>' : ''}
+                            <th>Grd</th>
+                            <th>Tr</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ENGLISH</td>
+                            ${reportType === 'EOT' ? '<td>1.8</td><td>1.8</td><td></td><td></td><td>1.8</td><td>12.0</td><td>49</td><td>61</td><td>2</td>' : ''}
+                            <td>C</td>
+                            <td>OMT</td>
+                        </tr>
+                        <tr>
+                            <td>MATHEMATICS</td>
+                            ${reportType === 'EOT' ? '<td>2.4</td><td>2.4</td><td></td><td></td><td>2.4</td><td>16.0</td><td>27</td><td>43</td><td>2</td>' : ''}
+                            <td>E</td>
+                            <td>OR</td>
+                        </tr>
+                        <!-- Add more subjects as needed -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="comments mb-3">
+                <div class="row">
+                    <div class="col-6">
+                        <p><strong>Class Teacher's comment:</strong></p>
+                        <p>Good performance, but you can do much better</p>
+                    </div>
+                    <div class="col-6">
+                        <p><strong>Head Teacher's comment:</strong></p>
+                        <p>Aim at the best result, you can achieve good results next term.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grading-scale">
+                <h6>GRADING</h6>
+                <table class="table table-sm">
+                    <tr><td>A</td><td>Exceptional</td><td>Demonstrates an extraordinary level of competency</td></tr>
+                    <tr><td>B</td><td>Outstanding</td><td>Demonstrates a high level of competency</td></tr>
+                    <tr><td>C</td><td>Satisfactory</td><td>Demonstrates an adequate level of competency</td></tr>
+                    <tr><td>D</td><td>Basic</td><td>Demonstrates a minimum level of competency</td></tr>
+                    <tr><td>E</td><td>Elementary</td><td>Demonstrates below the basic level of competency</td></tr>
+                </table>
+            </div>
+            
+            <div class="footer mt-3">
+                <p><strong>FEES BALANCE:</strong> UGX 0</p>
+                <p><strong>Print date:</strong> ${new Date().toLocaleDateString()}</p>
+                <p><em>Developed by ICT department</em></p>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = reportCardHTML;
+    container.classList.remove('d-none');
+}
+</script>
+{% endblock %}

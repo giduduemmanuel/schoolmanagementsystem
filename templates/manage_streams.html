@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Manage Streams</h1>
+
+<form method="POST">
+    <div>
+        <label for="class_level">Class Level:</label>
+        <input type="text" id="class_level" name="class_level" placeholder="S1,S2 use UPPER case" required>
+    </div>
+    <div>
+        <label for="stream_name">Stream Name:</label>
+        <input type="text" id="stream_name" name="stream_name" required>
+    </div>
+    <button type="submit">Add Stream</button>
+</form>
+
+<h2>Existing Streams</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Class Level</th>
+            <th>Stream Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stream in streams %}
+        <tr>
+            <td>{{ stream.class_level }}</td>
+            <td>{{ stream.stream_name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - School Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-cog"></i> Admin Panel</h2>
+        <p class="text-muted">System administration and settings</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-users"></i> User Management</h5>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    <i class="fas fa-user-plus"></i> Add User
+                </button>
+                <button class="btn btn-warning mb-2" onclick="resetPassword()">
+                    <i class="fas fa-key"></i> Reset Password
+                </button>
+                <button class="btn btn-danger mb-2" onclick="deleteUser()">
+                    <i class="fas fa-user-times"></i> Delete User
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-school"></i> School Settings</h5>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-info mb-2" data-bs-toggle="modal" data-bs-target="#schoolSettingsModal">
+                    <i class="fas fa-edit"></i> Edit School Info
+                </button>
+                <button class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#streamsModal">
+                    <i class="fas fa-stream"></i> <a href="{{ url_for('manage_streams') }}">Manage Streams</a>
+                </button>
+                <button class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#subjectsModal">
+                    <i class="fas fa-book"></i> <a href="{{ url_for('manage_subjects') }}">Manage Subjects</a>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-calendar"></i> Deadline Management</h5>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-warning mb-2" data-bs-toggle="modal" data-bs-target="#deadlineModal">
+                    <i class="fas fa-clock"></i> Set Deadline
+                </button>
+                <button class="btn btn-success mb-2" onclick="extendDeadline()">
+                    <i class="fas fa-calendar-plus"></i> Extend Deadline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-graduation-cap"></i> Student Management</h5>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#promoteStudentsModal">
+                    <i class="fas fa-arrow-up"></i> Promote Students
+                </button>
+                <button class="btn btn-danger mb-2" onclick="deleteStudent()">
+                    <i class="fas fa-user-minus"></i> Delete Student
+                </button>
+                <button class="btn btn-info mb-2" data-bs-toggle="modal" data-bs-target="#leftStudentsModal">
+                    <i class="fas fa-search"></i> View Left Students
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" name="full_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-control" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <select class="form-select" name="role" required>
+                            <option value="">Select Role</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="admin">Admin</option>
+                            <option value="bursar">Bursar</option>
+                            <option value="librarian">Librarian</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Subjects Taught</label>
+                        <input type="text" class="form-control" name="subjects_taught" placeholder="e.g., Math, English">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Classes Taught</label>
+                        <input type="text" class="form-control" name="classes_taught" placeholder="e.g., S1, S2">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addUser()">Add User</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- School Settings Modal -->
+<div class="modal fade" id="schoolSettingsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">School Settings</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="schoolSettingsForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">School Name</label>
+                            <input type="text" class="form-control" name="school_name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">School Email</label>
+                            <input type="email" class="form-control" name="school_email" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">School Motto</label>
+                        <input type="text" class="form-control" name="school_motto" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">School Address</label>
+                        <textarea class="form-control" name="school_address" rows="3" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">P.O Box</label>
+                            <input type="text" class="form-control" name="school_box" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Contacts</label>
+                            <input type="text" class="form-control" name="school_contacts" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveSchoolSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional modals would go here for streams, subjects, deadlines, etc. -->
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function addUser() {
+    const form = document.getElementById('addUserForm');
+    const formData = new FormData(form);
+    
+    // Generate user ID
+    const userId = 'USR' + Date.now().toString().slice(-6);
+    const tempPassword = 'temp' + Math.random().toString(36).slice(-4);
+    
+    const userData = {
+        user_id: userId,
+        full_name: formData.get('full_name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        role: formData.get('role'),
+        subjects_taught: formData.get('subjects_taught'),
+        classes_taught: formData.get('classes_taught'),
+        password: tempPassword
+    };
+    
+    // Here you would send the data to the server
+    alert(`User created successfully!\nUser ID: ${userId}\nTemporary Password: ${tempPassword}`);
+    
+    // Close modal and reset form
+    bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide();
+    form.reset();
+}
+
+function saveSchoolSettings() {
+    const form = document.getElementById('schoolSettingsForm');
+    const formData = new FormData(form);
+    
+    // Here you would send the data to the server
+    alert('School settings saved successfully!');
+    
+    // Close modal
+    bootstrap.Modal.getInstance(document.getElementById('schoolSettingsModal')).hide();
+}
+//delete user function to handle user deletion
+function deleteUser() {
+    const userId = prompt('Enter User ID to delete:');
+    if (userId) {
+        if (confirm(`Are you sure you want to delete user ${userId}?`)) {
+            fetch('/delete_user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `user_id=${encodeURIComponent(userId)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the user.');
+            });
+        }
+    }
+}
+
+// Function to extend deadline
+function extendDeadline() {
+    const newDate = prompt('Enter new deadline (YYYY-MM-DD):');
+    if (newDate) {
+        // Here you would send the new deadline to server
+        alert('Deadline extended successfully!');
+    }
+}
+
+function deleteStudent() {
+    const classLevel = prompt('Enter class (S1, S2, etc.):');
+    const stdNo = prompt('Enter student number:');
+    
+    if (classLevel && stdNo) {
+        if (confirm(`Are you sure you want to delete student ${stdNo} from ${classLevel}?`)) {
+            // Here you would send delete request to server
+            alert('Student deleted successfully!');
+        }
+    }
+}
+
+//add user function to handle form submission
+    function addUser() {
+        const form = document.getElementById('addUserForm');
+        const formData = new FormData(form);
+    
+        fetch('/add_user', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`User created successfully!\nUser ID: ${data.user_id}\nTemporary Password: ${data.temp_password}`);
+                // Close modal and reset form
+                bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide();
+                form.reset();
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding the user.');
+        });
+    }
+
+//reset password function to handle password reset
+    function resetPassword() {
+        const userId = prompt('Enter User ID to reset password:');
+        if (userId) {
+            fetch('/reset_password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `user_id=${encodeURIComponent(userId)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while resetting the password.');
+            });
+        }
+    }
+    </script>
+{% endblock %}

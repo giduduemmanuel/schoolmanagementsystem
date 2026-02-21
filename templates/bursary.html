@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+
+{% block title %}Bursary Management - School Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-money-bill"></i> Bursary Management</h2>
+        <p class="text-muted">Manage school fees and payments</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-dollar-sign"></i> Record Payment</h5>
+            </div>
+            <div class="card-body">
+                <form id="paymentForm">
+                    <div class="mb-3">
+                        <label class="form-label">Student Number</label>
+                        <input type="number" class="form-control" name="std_no" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Class</label>
+                        <select class="form-select" name="class_level" required>
+                            <option value="">Select Class</option>
+                            <option value="S1">S1</option>
+                            <option value="S2">S2</option>
+                            <option value="S3">S3</option>
+                            <option value="S4">S4</option>
+                            <option value="S5">S5</option>
+                            <option value="S6">S6</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Term</label>
+                        <select class="form-select" name="term" required>
+                            <option value="">Select Term</option>
+                            <option value="I">Term I</option>
+                            <option value="II">Term II</option>
+                            <option value="III">Term III</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Year</label>
+                        <input type="number" class="form-control" name="year" value="2025" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Amount Paid</label>
+                        <input type="number" step="0.01" class="form-control" name="amount_paid" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select" name="payment_method" required>
+                            <option value="">Select Method</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Mobile Money">Mobile Money</option>
+                            <option value="Cheque">Cheque</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="recordPayment()">
+                        <i class="fas fa-save"></i> Record Payment
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-receipt"></i> Print Receipt</h5>
+            </div>
+            <div class="card-body">
+                <form id="receiptForm">
+                    <div class="mb-3">
+                        <label class="form-label">Receipt Number</label>
+                        <input type="text" class="form-control" name="receipt_no" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="printReceipt()">
+                        <i class="fas fa-print"></i> Print Receipt
+                    </button>
+                </form>
+                
+                <hr>
+                
+                <h6>Quick Actions</h6>
+                <button class="btn btn-warning btn-sm mb-2" onclick="generateDefaultersList()">
+                    <i class="fas fa-exclamation-triangle"></i> Defaulters List
+                </button>
+                <button class="btn btn-info btn-sm mb-2" onclick="generateFeesReport()">
+                    <i class="fas fa-chart-line"></i> Fees Report
+                </button>
+                <button class="btn btn-secondary btn-sm mb-2" onclick="generateLedger()">
+                    <i class="fas fa-book"></i> Generate Ledger
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-bar"></i> Fees Collection Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h3 id="totalCollected">UGX 0</h3>
+                                <p>Total Collected</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body text-center">
+                                <h3 id="totalPending">UGX 0</h3>
+                                <p>Total Pending</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-info text-white">
+                            <div class="card-body text-center">
+                                <h3 id="totalStudents">0</h3>
+                                <p>Total Students</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body text-center">
+                                <h3 id="defaulters">0</h3>
+                                <p>Defaulters</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-list"></i> Recent Payments</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="paymentsTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Receipt No</th>
+                                <th>Student No</th>
+                                <th>Class</th>
+                                <th>Term</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Payments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function recordPayment() {
+    const form = document.getElementById('paymentForm');
+    const formData = new FormData(form);
+    
+    // Generate receipt number
+    const receiptNo = 'RCP' + Date.now().toString().slice(-8);
+    
+    // Here you would send the data to the server
+    alert(`Payment recorded successfully!\nReceipt Number: ${receiptNo}`);
+    form.reset();
+    loadRecentPayments();
+    updateFeesStats();
+}
+
+function printReceipt() {
+    const receiptNo = document.querySelector('[name="receipt_no"]').value;
+    if (!receiptNo) {
+        alert('Please enter receipt number');
+        return;
+    }
+    
+    // Here you would generate and print the receipt
+    alert('Receipt printed successfully!');
+}
+
+function generateDefaultersList() {
+    // Here you would generate defaulters list
+    alert('Defaulters list generated successfully!');
+}
+
+function generateFeesReport() {
+    // Here you would generate fees report
+    alert('Fees report generated successfully!');
+}
+
+function generateLedger() {
+    // Here you would generate ledger
+    alert('Ledger generated successfully!');
+}
+
+function loadRecentPayments() {
+    // Here you would load recent payments from the server
+    const tbody = document.querySelector('#paymentsTable tbody');
+    tbody.innerHTML = `
+        <tr>
+            <td>${new Date().toLocaleDateString()}</td>
+            <td>RCP12345678</td>
+            <td>001</td>
+            <td>S1</td>
+            <td>II</td>
+            <td>UGX 500,000</td>
+            <td>Cash</td>
+            <td>
+                <button class="btn btn-sm btn-primary" onclick="printReceipt()">Print</button>
+                <button class="btn btn-sm btn-info">View</button>
+            </td>
+        </tr>
+    `;
+}
+
+function updateFeesStats() {
+    // Here you would load stats from the server
+    document.getElementById('totalCollected').textContent = 'UGX 15,000,000';
+    document.getElementById('totalPending').textContent = 'UGX 5,000,000';
+    document.getElementById('totalStudents').textContent = '500';
+    document.getElementById('defaulters').textContent = '25';
+}
+
+// Load initial data
+document.addEventListener('DOMContentLoaded', function() {
+    loadRecentPayments();
+    updateFeesStats();
+});
+</script>
+{% endblock %}

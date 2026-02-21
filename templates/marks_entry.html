@@ -1,0 +1,1260 @@
+{% extends "base.html" %}
+
+{% block title %}Marks Entry - School Management System{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-edit"></i> Marks Entry</h2>
+        <p class="text-muted">Enter and manage student marks</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Selection Criteria</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <select class="form-select" id="yearSelect">
+                            <option value="">Choose Year</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="termSelect">
+                            <option value="">Choose Term</option>
+                            <option value="I">Term I</option>
+                            <option value="II">Term II</option>
+                            <option value="III">Term III</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="classSelect">
+                            <option value="">Choose Class</option>
+                            <option value="S1">S1</option>
+                            <option value="S2">S2</option>
+                            <option value="S3">S3</option>
+                            <option value="S4">S4</option>
+                            <option value="S5">S5</option>
+                            <option value="S6">S6</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="streamSelect">
+                            <option value="">Choose Stream</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" id="loadDataBtn">
+                            <i class="fas fa-download"></i> Load Data
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-success" id="saveDataBtn">
+                            <i class="fas fa-save">Save Data</i> 
+                        </button>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-2">
+                        <button class="btn btn-info" id="addRowBtn">
+                            <i class="fas fa-plus">Add Row</i>
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-warning" id="exportExcelBtn">
+                            <i class="fas fa-file-excel"></i> Export Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Marks Entry Table</h5>
+            </div>
+            <br>
+            <div class="controls">
+                <label for="subjectFilter">Filter by Subject:</label>
+                <select id="subjectFilter">
+                    <option value="all">All Subjects</option>
+                    <option value="ENG">English</option>
+                    <option value="MTC">Mathematics</option>
+                    <option value="BIO">Biology</option>
+                    <option value="PHY">Physics</option>
+                    <option value="GEO">Geography</option>
+                    <option value="HIST">History</option>
+                    <option value="CHEM">Chemistry</option>
+                    <option value="ICT">ICT</option>
+                    <option value="ENT">Entrepreneurship</option>
+                    <option value="CRE">CRE</option>
+                    <option value="AGRIC">Agriculture</option>
+                    <option value="PE">Physical Education</option>
+                    <option value="KIS">Kiswahili</option>
+                    <option value="ART">Art and Design</option>
+                    <option value="IRE">IRE</option>
+                    <option value="LIT">Literature</option>
+                    <option value="T&D">Technology and Design</option>
+                    <option value="F&NT">Food and Nutrition</option>
+                    <option value="LAT">Latin</option>
+                    <option value="ATE">Ateso</option>
+                    <option value="LUM">Lumaasaba</option>
+                    <option value="LUG">Luganda</option>
+                    <option value="LUS">Lusoga</option>
+                    <option value="LEBA">Leb Acholi</option>
+                    <option value="LEBL">Leb Lango</option>
+                    <option value="RUN">Runyakore</option>
+                    <option value="RUT">Rutoro</option>
+                    <option value="FRE">French</option>
+                    <option value="GER">German</option>
+                    <option value="DHO">Dhopadhola</option>
+                </select>
+            </div>
+        
+            <table id="gradesTable">
+                <thead>
+                    <tr>
+                        <th>STD NO</th>
+                        <th>SDT NAME</th>
+                        <th>CLASS</th>
+                        <th>STREAM</th>
+                        <th>YEAR</th>
+                        <th>TERM</th>
+                        <th>GENDER</th>
+                        <th>SECTION</th>
+                        
+                        <!-- English -->
+                        <th class="subject-cell ENG">ENG 1</th>
+                        <th class="subject-cell ENG">ENG 2</th>
+                        <th class="subject-cell ENG">ENG 3</th>
+                        <th class="subject-cell ENG">ENG 4</th>
+                        <th class="subject-cell ENG">BOT</th>
+                        <th class="subject-cell ENG">MOT</th>
+                        <th class="subject-cell ENG">EOT</th>
+                        
+                        <!-- Mathematics -->
+                        <th class="subject-cell MTC">MTC 1</th>
+                        <th class="subject-cell MTC">MTC 2</th>
+                        <th class="subject-cell MTC">MTC 3</th>
+                        <th class="subject-cell MTC">MTC 4</th>
+                        <th class="subject-cell MTC">BOT</th>
+                        <th class="subject-cell MTC">MOT</th>
+                        <th class="subject-cell MTC">EOT</th>
+                        
+                        <!-- Biology -->
+                        <th class="subject-cell BIO">BIO1</th>
+                        <th class="subject-cell BIO">BIO 2</th>
+                        <th class="subject-cell BIO">BIO 3</th>
+                        <th class="subject-cell BIO">BIO 4</th>
+                        <th class="subject-cell BIO">BOT</th>
+                        <th class="subject-cell BIO">MOT</th>
+                        <th class="subject-cell BIO">EOT</th>
+                        
+                        <!-- Physics -->
+                        <th class="subject-cell PHY">PHY1</th>
+                        <th class="subject-cell PHY">PHY 2</th>
+                        <th class="subject-cell PHY">PHY3</th>
+                        <th class="subject-cell PHY">PHY4</th>
+                        <th class="subject-cell PHY">PR</th>
+                        <th class="subject-cell PHY">BOT</th>
+                        <th class="subject-cell PHY">MOT</th>
+                        <th class="subject-cell PHY">EOT</th>
+                        
+                        <!-- Geography -->
+                        <th class="subject-cell GEO">GEO1</th>
+                        <th class="subject-cell GEO">GEO2</th>
+                        <th class="subject-cell GEO">GEO3</th>
+                        <th class="subject-cell GEO">GEO4</th>
+                        <th class="subject-cell GEO">BOT</th>
+                        <th class="subject-cell GEO">MOT</th>
+                        <th class="subject-cell GEO">EOT</th>
+                        
+                        <!-- History -->
+                        <th class="subject-cell HIST">HIST1</th>
+                        <th class="subject-cell HIST">HIST2</th>
+                        <th class="subject-cell HIST">HIST3</th>
+                        <th class="subject-cell HIST">HIST4</th>
+                        <th class="subject-cell HIST">BOT</th>
+                        <th class="subject-cell HIST">MOT</th>
+                        <th class="subject-cell HIST">EOT</th>
+                        
+                        <!-- Chemistry -->
+                        <th class="subject-cell CHEM">CHEM1</th>
+                        <th class="subject-cell CHEM">CHEM2</th>
+                        <th class="subject-cell CHEM">CHEM3</th>
+                        <th class="subject-cell CHEM">CHEM4</th>
+                        <th class="subject-cell CHEM">BOT</th>
+                        <th class="subject-cell CHEM">MOT</th>
+                        <th class="subject-cell CHEM">EOT</th>
+                        
+                        <!-- ICT -->
+                        <th class="subject-cell ICT">ICT1</th>
+                        <th class="subject-cell ICT">ICT2</th>
+                        <th class="subject-cell ICT">ICT3</th>
+                        <th class="subject-cell ICT">ICT4</th>
+                        <th class="subject-cell ICT">BOT</th>
+                        <th class="subject-cell ICT">MOT</th>
+                        <th class="subject-cell ICT">EOT</th>
+                        
+                        <!-- Entrepreneurship -->
+                        <th class="subject-cell ENT">ENT1</th>
+                        <th class="subject-cell ENT">ENT2</th>
+                        <th class="subject-cell ENT">ENT3</th>
+                        <th class="subject-cell ENT">ENT4</th>
+                        <th class="subject-cell ENT">BOT</th>
+                        <th class="subject-cell ENT">MOT</th>
+                        <th class="subject-cell ENT">EOT</th>
+                        
+                        <!-- CRE -->
+                        <th class="subject-cell CRE">CRE1</th>
+                        <th class="subject-cell CRE">CRE2</th>
+                        <th class="subject-cell CRE">CRE3</th>
+                        <th class="subject-cell CRE">CRE4</th>
+                        <th class="subject-cell CRE">PR</th>
+                        <th class="subject-cell CRE">BOT</th>
+                        <th class="subject-cell CRE">MOT</th>
+                        <th class="subject-cell CRE">EOT</th>
+                        
+                        <!-- Agriculture -->
+                        <th class="subject-cell AGRIC">AGRIC1</th>
+                        <th class="subject-cell AGRIC">AGRIC2</th>
+                        <th class="subject-cell AGRIC">AGRIC3</th>
+                        <th class="subject-cell AGRIC">AGRIC4</th>
+                        <th class="subject-cell AGRIC">BOT</th>
+                        <th class="subject-cell AGRIC">MOT</th>
+                        <th class="subject-cell AGRIC">EOT</th>
+                        
+                        <!-- Physical Education -->
+                        <th class="subject-cell PE">PE1</th>
+                        <th class="subject-cell PE">PE2</th>
+                        <th class="subject-cell PE">PE3</th>
+                        <th class="subject-cell PE">PE4</th>
+                        <th class="subject-cell PE">BOT</th>
+                        <th class="subject-cell PE">MOT</th>
+                        <th class="subject-cell PE">EOT</th>
+                        
+                        <!-- Kiswahili -->
+                        <th class="subject-cell KIS">KIS1</th>
+                        <th class="subject-cell KIS">KIS2</th>
+                        <th class="subject-cell KIS">KIS3</th>
+                        <th class="subject-cell KIS">KIS4</th>
+                        <th class="subject-cell KIS">BOT</th>
+                        <th class="subject-cell KIS">MOT</th>
+                        <th class="subject-cell KIS">EOT</th>
+                        
+                        <!-- Art and Design -->
+                        <th class="subject-cell ART">ART1</th>
+                        <th class="subject-cell ART">ART2</th>
+                        <th class="subject-cell ART">ART3</th>
+                        <th class="subject-cell ART">ART4</th>
+                        <th class="subject-cell ART">BOT</th>
+                        <th class="subject-cell ART">MOT</th>
+                        <th class="subject-cell ART">EOT</th>
+                        
+                        <!-- IRE -->
+                        <th class="subject-cell IRE">IRE1</th>
+                        <th class="subject-cell IRE">IRE2</th>
+                        <th class="subject-cell IRE">IRE3</th>
+                        <th class="subject-cell IRE">IRE4</th>
+                        <th class="subject-cell IRE">BOT</th>
+                        <th class="subject-cell IRE">MOT</th>
+                        <th class="subject-cell IRE">EOT</th>
+                        
+                        <!-- Literature -->
+                        <th class="subject-cell LIT">LIT1</th>
+                        <th class="subject-cell LIT">LIT2</th>
+                        <th class="subject-cell LIT">LIT3</th>
+                        <th class="subject-cell LIT">LIT4</th>
+                        <th class="subject-cell LIT">BOT</th>
+                        <th class="subject-cell LIT">MOT</th>
+                        <th class="subject-cell LIT">EOT</th>
+                        
+                        <!-- Technology and Design -->
+                        <th class="subject-cell T&D">T&D1</th>
+                        <th class="subject-cell T&D">T&D2</th>
+                        <th class="subject-cell T&D">T&D3</th>
+                        <th class="subject-cell T&D">T&D4</th>
+                        <th class="subject-cell T&D">BOT</th>
+                        <th class="subject-cell T&D">MOT</th>
+                        <th class="subject-cell T&D">EOT</th>
+                        
+                        <!-- Food and Nutrition -->
+                        <th class="subject-cell F&NT">F&NT1</th>
+                        <th class="subject-cell F&NT">F&NT2</th>
+                        <th class="subject-cell F&NT">F&NT3</th>
+                        <th class="subject-cell F&NT">F&NT4</th>
+                        <th class="subject-cell F&NT">BOT</th>
+                        <th class="subject-cell F&NT">MOT</th>
+                        <th class="subject-cell F&NT">EOT</th>
+                        
+                        <!-- Latin -->
+                        <th class="subject-cell LAT">LAT1</th>
+                        <th class="subject-cell LAT">LAT2</th>
+                        <th class="subject-cell LAT">LAT3</th>
+                        <th class="subject-cell LAT">LAT4</th>
+                        <th class="subject-cell LAT">BOT</th>
+                        <th class="subject-cell LAT">MOT</th>
+                        <th class="subject-cell LAT">EOT</th>
+                        
+                        <!-- Ateso -->
+                        <th class="subject-cell ATE">ATE1</th>
+                        <th class="subject-cell ATE">ATE2</th>
+                        <th class="subject-cell ATE">ATE3</th>
+                        <th class="subject-cell ATE">ATE4</th>
+                        <th class="subject-cell ATE">BOT</th>
+                        <th class="subject-cell ATE">MOT</th>
+                        <th class="subject-cell ATE">EOT</th>
+                        
+                        <!-- Lumaasaba -->
+                        <th class="subject-cell LUM">LUM1</th>
+                        <th class="subject-cell LUM">LUM2</th>
+                        <th class="subject-cell LUM">LUM3</th>
+                        <th class="subject-cell LUM">LUM4</th>
+                        <th class="subject-cell LUM">BOT</th>
+                        <th class="subject-cell LUM">MOT</th>
+                        <th class="subject-cell LUM">EOT</th>
+                        
+                        <!-- Luganda -->
+                        <th class="subject-cell LUG">LUG1</th>
+                        <th class="subject-cell LUG">LUG2</th>
+                        <th class="subject-cell LUG">LUG3</th>
+                        <th class="subject-cell LUG">LUG4</th>
+                        <th class="subject-cell LUG">BOT</th>
+                        <th class="subject-cell LUG">MOT</th>
+                        <th class="subject-cell LUG">EOT</th>
+                        
+                        <!-- Lusoga -->
+                        <th class="subject-cell LUS">LUS1</th>
+                        <th class="subject-cell LUS">LUS2</th>
+                        <th class="subject-cell LUS">LUS3</th>
+                        <th class="subject-cell LUS">LUS4</th>
+                        <th class="subject-cell LUS">BOT</th>
+                        <th class="subject-cell LUS">MOT</th>
+                        <th class="subject-cell LUS">EOT</th>
+                        
+                        <!-- Leb Acholi -->
+                        <th class="subject-cell LEBA">LEBA1</th>
+                        <th class="subject-cell LEBA">LEBA2</th>
+                        <th class="subject-cell LEBA">LEBA3</th>
+                        <th class="subject-cell LEBA">LEBA4</th>
+                        <th class="subject-cell LEBA">BOT</th>
+                        <th class="subject-cell LEBA">MOT</th>
+                        <th class="subject-cell LEBA">EOT</th>
+                        
+                        <!-- Leb Lango -->
+                        <th class="subject-cell LEBL">LEBL1</th>
+                        <th class="subject-cell LEBL">LEBL2</th>
+                        <th class="subject-cell LEBL">LEBL3</th>
+                        <th class="subject-cell LEBL">LEBL4</th>
+                        <th class="subject-cell LEBL">BOT</th>
+                        <th class="subject-cell LEBL">MOT</th>
+                        <th class="subject-cell LEBL">EOT</th>
+                        
+                        <!-- Runyakore -->
+                        <th class="subject-cell RUN">RUN1</th>
+                        <th class="subject-cell RUN">RUN2</th>
+                        <th class="subject-cell RUN">RUN3</th>
+                        <th class="subject-cell RUN">RUN4</th>
+                        <th class="subject-cell RUN">BOT</th>
+                        <th class="subject-cell RUN">MOT</th>
+                        <th class="subject-cell RUN">EOT</th>
+                        
+                        <!-- Rutoro -->
+                        <th class="subject-cell RUT">RUT1</th>
+                        <th class="subject-cell RUT">RUT2</th>
+                        <th class="subject-cell RUT">RUT3</th>
+                        <th class="subject-cell RUT">RUT4</th>
+                        <th class="subject-cell RUT">BOT</th>
+                        <th class="subject-cell RUT">MOT</th>
+                        <th class="subject-cell RUT">EOT</th>
+                        
+                        <!-- French -->
+                        <th class="subject-cell FRE">FRE1</th>
+                        <th class="subject-cell FRE">FRE2</th>
+                        <th class="subject-cell FRE">FRE3</th>
+                        <th class="subject-cell FRE">FRE4</th>
+                        <th class="subject-cell FRE">BOT</th>
+                        <th class="subject-cell FRE">MOT</th>
+                        <th class="subject-cell FRE">EOT</th>
+                        
+                        <!-- German -->
+                        <th class="subject-cell GER">GER1</th>
+                        <th class="subject-cell GER">GER2</th>
+                        <th class="subject-cell GER">GER3</th>
+                        <th class="subject-cell GER">GER4</th>
+                        <th class="subject-cell GER">BOT</th>
+                        <th class="subject-cell GER">MOT</th>
+                        <th class="subject-cell GER">EOT</th>
+                        
+                        <!-- Dhopadhola -->
+                        <th class="subject-cell DHO">DHO1</th>
+                        <th class="subject-cell DHO">DHO2</th>
+                        <th class="subject-cell DHO">DHO3</th>
+                        <th class="subject-cell DHO">DHO4</th>
+                        <th class="subject-cell DHO">BOT</th>
+                        <th class="subject-cell DHO">MOT</th>
+                        <th class="subject-cell DHO">EOT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td contenteditable="true">1</td>
+                        <td contenteditable="true">EMMANUEL</td>
+                        <td>S1</td>
+                        <td>STREAM A</td>
+                        <td>2025</td>
+                        <td>I</td>
+                        <td contenteditable="true">M</td>
+                        <td contenteditable="true">BOARDING</td>
+                        
+                        <!-- English -->
+                        <td class="subject-cell ENG"><input type="text" value=""></td>
+                        <td class="subject-cell ENG"><input type="text" value=""></td>
+                        <td class="subject-cell ENG"><input type="text" value=""></td>
+                        <td class="subject-cell ENG"><input type="text" value=""></td>
+                        <td class="subject-cell ENG"><input type="text" value=""></td>
+                        <td class="subject-cell ENG"><input type="text" value=""></td>
+                        <td class="subject-cell ENG"><input type="text" value=""></td>
+                        
+                        <!-- Mathematics -->
+                        <td class="subject-cell MTC"><input type="text" value=""></td>
+                        <td class="subject-cell MTC"><input type="text" value=""></td>
+                        <td class="subject-cell MTC"><input type="text" value=""></td>
+                        <td class="subject-cell MTC"><input type="text" value=""></td>
+                        <td class="subject-cell MTC"><input type="text" value=""></td>
+                        <td class="subject-cell MTC"><input type="text" value=""></td>
+                        <td class="subject-cell MTC"><input type="text" value=""></td>
+                        
+                        <!-- Biology -->
+                        <td class="subject-cell BIO"><input type="text" value=""></td>
+                        <td class="subject-cell BIO"><input type="text" value=""></td>
+                        <td class="subject-cell BIO"><input type="text" value=""></td>
+                        <td class="subject-cell BIO"><input type="text" value=""></td>
+                        <td class="subject-cell BIO"><input type="text" value=""></td>
+                        <td class="subject-cell BIO"><input type="text" value=""></td>
+                        <td class="subject-cell BIO"><input type="text" value=""></td>
+                        
+                        <!-- Physics -->
+                        <td class="subject-cell PHY"><input type="text" value=""></td>
+                        <td class="subject-cell PHY"><input type="text" value=""></td>
+                        <td class="subject-cell PHY"><input type="text" value=""></td>
+                        <td class="subject-cell PHY"><input type="text" value=""></td>
+                        <td class="subject-cell PHY"><input type="text" value=""></td>
+                        <td class="subject-cell PHY"><input type="text" value=""></td>
+                        <td class="subject-cell PHY"><input type="text" value=""></td>
+                        <td class="subject-cell PHY"><input type="text" value=""></td>
+                        
+                        <!-- Geography -->
+                        <td class="subject-cell GEO"><input type="text" value=""></td>
+                        <td class="subject-cell GEO"><input type="text" value=""></td>
+                        <td class="subject-cell GEO"><input type="text" value=""></td>
+                        <td class="subject-cell GEO"><input type="text" value=""></td>
+                        <td class="subject-cell GEO"><input type="text" value=""></td>
+                        <td class="subject-cell GEO"><input type="text" value=""></td>
+                        <td class="subject-cell GEO"><input type="text" value=""></td>
+                        
+                        <!-- History -->
+                        <td class="subject-cell HIST"><input type="text" value=""></td>
+                        <td class="subject-cell HIST"><input type="text" value=""></td>
+                        <td class="subject-cell HIST"><input type="text" value=""></td>
+                        <td class="subject-cell HIST"><input type="text" value=""></td>
+                        <td class="subject-cell HIST"><input type="text" value=""></td>
+                        <td class="subject-cell HIST"><input type="text" value=""></td>
+                        <td class="subject-cell HIST"><input type="text" value=""></td>
+                        
+                        <!-- Chemistry -->
+                        <td class="subject-cell CHEM"><input type="text" value=""></td>
+                        <td class="subject-cell CHEM"><input type="text" value=""></td>
+                        <td class="subject-cell CHEM"><input type="text" value=""></td>
+                        <td class="subject-cell CHEM"><input type="text" value=""></td>
+                        <td class="subject-cell CHEM"><input type="text" value=""></td>
+                        <td class="subject-cell CHEM"><input type="text" value=""></td>
+                        <td class="subject-cell CHEM"><input type="text" value=""></td>
+                        
+                        <!-- ICT -->
+                        <td class="subject-cell ICT"><input type="text" value=""></td>
+                        <td class="subject-cell ICT"><input type="text" value=""></td>
+                        <td class="subject-cell ICT"><input type="text" value=""></td>
+                        <td class="subject-cell ICT"><input type="text" value=""></td>
+                        <td class="subject-cell ICT"><input type="text" value=""></td>
+                        <td class="subject-cell ICT"><input type="text" value=""></td>
+                        <td class="subject-cell ICT"><input type="text" value=""></td>
+                        
+                        <!-- Entrepreneurship -->
+                        <td class="subject-cell ENT"><input type="text" value=""></td>
+                        <td class="subject-cell ENT"><input type="text" value=""></td>
+                        <td class="subject-cell ENT"><input type="text" value=""></td>
+                        <td class="subject-cell ENT"><input type="text" value=""></td>
+                        <td class="subject-cell ENT"><input type="text" value=""></td>
+                        <td class="subject-cell ENT"><input type="text" value=""></td>
+                        <td class="subject-cell ENT"><input type="text" value=""></td>
+                        
+                        <!-- CRE -->
+                        <td class="subject-cell CRE"><input type="text" value=""></td>
+                        <td class="subject-cell CRE"><input type="text" value=""></td>
+                        <td class="subject-cell CRE"><input type="text" value=""></td>
+                        <td class="subject-cell CRE"><input type="text" value=""></td>
+                        <td class="subject-cell CRE"><input type="text" value=""></td>
+                        <td class="subject-cell CRE"><input type="text" value=""></td>
+                        <td class="subject-cell CRE"><input type="text" value=""></td>
+                        <td class="subject-cell CRE"><input type="text" value=""></td>
+                        
+                        <!-- Agriculture -->
+                        <td class="subject-cell AGRIC"><input type="text" value=""></td>
+                        <td class="subject-cell AGRIC"><input type="text" value=""></td>
+                        <td class="subject-cell AGRIC"><input type="text" value=""></td>
+                        <td class="subject-cell AGRIC"><input type="text" value=""></td>
+                        <td class="subject-cell AGRIC"><input type="text" value=""></td>
+                        <td class="subject-cell AGRIC"><input type="text" value=""></td>
+                        <td class="subject-cell AGRIC"><input type="text" value=""></td>
+                        
+                        <!-- Physical Education -->
+                        <td class="subject-cell PE"><input type="text" value=""></td>
+                        <td class="subject-cell PE"><input type="text" value=""></td>
+                        <td class="subject-cell PE"><input type="text" value=""></td>
+                        <td class="subject-cell PE"><input type="text" value=""></td>
+                        <td class="subject-cell PE"><input type="text" value=""></td>
+                        <td class="subject-cell PE"><input type="text" value=""></td>
+                        <td class="subject-cell PE"><input type="text" value=""></td>
+                        
+                        <!-- Kiswahili -->
+                        <td class="subject-cell KIS"><input type="text" value=""></td>
+                        <td class="subject-cell KIS"><input type="text" value=""></td>
+                        <td class="subject-cell KIS"><input type="text" value=""></td>
+                        <td class="subject-cell KIS"><input type="text" value=""></td>
+                        <td class="subject-cell KIS"><input type="text" value=""></td>
+                        <td class="subject-cell KIS"><input type="text" value=""></td>
+                        <td class="subject-cell KIS"><input type="text" value=""></td>
+                        
+                        <!-- Art and Design -->
+                        <td class="subject-cell ART"><input type="text" value=""></td>
+                        <td class="subject-cell ART"><input type="text" value=""></td>
+                        <td class="subject-cell ART"><input type="text" value=""></td>
+                        <td class="subject-cell ART"><input type="text" value=""></td>
+                        <td class="subject-cell ART"><input type="text" value=""></td>
+                        <td class="subject-cell ART"><input type="text" value=""></td>
+                        <td class="subject-cell ART"><input type="text" value=""></td>
+                        
+                        <!-- IRE -->
+                        <td class="subject-cell IRE"><input type="text" value=""></td>
+                        <td class="subject-cell IRE"><input type="text" value=""></td>
+                        <td class="subject-cell IRE"><input type="text" value=""></td>
+                        <td class="subject-cell IRE"><input type="text" value=""></td>
+                        <td class="subject-cell IRE"><input type="text" value=""></td>
+                        <td class="subject-cell IRE"><input type="text" value=""></td>
+                        <td class="subject-cell IRE"><input type="text" value=""></td>
+                        
+                        <!-- Literature -->
+                        <td class="subject-cell LIT"><input type="text" value=""></td>
+                        <td class="subject-cell LIT"><input type="text" value=""></td>
+                        <td class="subject-cell LIT"><input type="text" value=""></td>
+                        <td class="subject-cell LIT"><input type="text" value=""></td>
+                        <td class="subject-cell LIT"><input type="text" value=""></td>
+                        <td class="subject-cell LIT"><input type="text" value=""></td>
+                        <td class="subject-cell LIT"><input type="text" value=""></td>
+                        
+                        <!-- Technology and Design -->
+                        <td class="subject-cell T&D"><input type="text" value=""></td>
+                        <td class="subject-cell T&D"><input type="text" value=""></td>
+                        <td class="subject-cell T&D"><input type="text" value=""></td>
+                        <td class="subject-cell T&D"><input type="text" value=""></td>
+                        <td class="subject-cell T&D"><input type="text" value=""></td>
+                        <td class="subject-cell T&D"><input type="text" value=""></td>
+                        <td class="subject-cell T&D"><input type="text" value=""></td>
+                        
+                        <!-- Food and Nutrition -->
+                        <td class="subject-cell F&NT"><input type="text" value=""></td>
+                        <td class="subject-cell F&NT"><input type="text" value=""></td>
+                        <td class="subject-cell F&NT"><input type="text" value=""></td>
+                        <td class="subject-cell F&NT"><input type="text" value=""></td>
+                        <td class="subject-cell F&NT"><input type="text" value=""></td>
+                        <td class="subject-cell F&NT"><input type="text" value=""></td>
+                        <td class="subject-cell F&NT"><input type="text" value=""></td>
+                        
+                        <!-- Latin -->
+                        <td class="subject-cell LAT"><input type="text" value=""></td>
+                        <td class="subject-cell LAT"><input type="text" value=""></td>
+                        <td class="subject-cell LAT"><input type="text" value=""></td>
+                        <td class="subject-cell LAT"><input type="text" value=""></td>
+                        <td class="subject-cell LAT"><input type="text" value=""></td>
+                        <td class="subject-cell LAT"><input type="text" value=""></td>
+                        <td class="subject-cell LAT"><input type="text" value=""></td>
+                        
+                        <!-- Ateso -->
+                        <td class="subject-cell ATE"><input type="text" value=""></td>
+                        <td class="subject-cell ATE"><input type="text" value=""></td>
+                        <td class="subject-cell ATE"><input type="text" value=""></td>
+                        <td class="subject-cell ATE"><input type="text" value=""></td>
+                        <td class="subject-cell ATE"><input type="text" value=""></td>
+                        <td class="subject-cell ATE"><input type="text" value=""></td>
+                        <td class="subject-cell ATE"><input type="text" value=""></td>
+                        
+                        <!-- Lumaasaba -->
+                        <td class="subject-cell LUM"><input type="text" value=""></td>
+                        <td class="subject-cell LUM"><input type="text" value=""></td>
+                        <td class="subject-cell LUM"><input type="text" value=""></td>
+                        <td class="subject-cell LUM"><input type="text" value=""></td>
+                        <td class="subject-cell LUM"><input type="text" value=""></td>
+                        <td class="subject-cell LUM"><input type="text" value=""></td>
+                        <td class="subject-cell LUM"><input type="text" value=""></td>
+                        
+                        <!-- Luganda -->
+                        <td class="subject-cell LUG"><input type="text" value=""></td>
+                        <td class="subject-cell LUG"><input type="text" value=""></td>
+                        <td class="subject-cell LUG"><input type="text" value=""></td>
+                        <td class="subject-cell LUG"><input type="text" value=""></td>
+                        <td class="subject-cell LUG"><input type="text" value=""></td>
+                        <td class="subject-cell LUG"><input type="text" value=""></td>
+                        <td class="subject-cell LUG"><input type="text" value=""></td>
+                        
+                        <!-- Lusoga -->
+                        <td class="subject-cell LUS"><input type="text" value=""></td>
+                        <td class="subject-cell LUS"><input type="text" value=""></td>
+                        <td class="subject-cell LUS"><input type="text" value=""></td>
+                        <td class="subject-cell LUS"><input type="text" value=""></td>
+                        <td class="subject-cell LUS"><input type="text" value=""></td>
+                        <td class="subject-cell LUS"><input type="text" value=""></td>
+                        <td class="subject-cell LUS"><input type="text" value=""></td>
+                        
+                        <!-- Leb Acholi -->
+                        <td class="subject-cell LEBA"><input type="text" value=""></td>
+                        <td class="subject-cell LEBA"><input type="text" value=""></td>
+                        <td class="subject-cell LEBA"><input type="text" value=""></td>
+                        <td class="subject-cell LEBA"><input type="text" value=""></td>
+                        <td class="subject-cell LEBA"><input type="text" value=""></td>
+                        <td class="subject-cell LEBA"><input type="text" value=""></td>
+                        <td class="subject-cell LEBA"><input type="text" value=""></td>
+                        
+                        <!-- Leb Lango -->
+                        <td class="subject-cell LEBL"><input type="text" value=""></td>
+                        <td class="subject-cell LEBL"><input type="text" value=""></td>
+                        <td class="subject-cell LEBL"><input type="text" value=""></td>
+                        <td class="subject-cell LEBL"><input type="text" value=""></td>
+                        <td class="subject-cell LEBL"><input type="text" value=""></td>
+                        <td class="subject-cell LEBL"><input type="text" value=""></td>
+                        <td class="subject-cell LEBL"><input type="text" value=""></td>
+                        
+                        <!-- Runyakore -->
+                        <td class="subject-cell RUN"><input type="text" value=""></td>
+                        <td class="subject-cell RUN"><input type="text" value=""></td>
+                        <td class="subject-cell RUN"><input type="text" value=""></td>
+                        <td class="subject-cell RUN"><input type="text" value=""></td>
+                        <td class="subject-cell RUN"><input type="text" value=""></td>
+                        <td class="subject-cell RUN"><input type="text" value=""></td>
+                        <td class="subject-cell RUN"><input type="text" value=""></td>
+                        
+                        <!-- Rutoro -->
+                        <td class="subject-cell RUT"><input type="text" value=""></td>
+                        <td class="subject-cell RUT"><input type="text" value=""></td>
+                        <td class="subject-cell RUT"><input type="text" value=""></td>
+                        <td class="subject-cell RUT"><input type="text" value=""></td>
+                        <td class="subject-cell RUT"><input type="text" value=""></td>
+                        <td class="subject-cell RUT"><input type="text" value=""></td>
+                        <td class="subject-cell RUT"><input type="text" value=""></td>
+                        
+                        <!-- French -->
+                        <td class="subject-cell FRE"><input type="text" value=""></td>
+                        <td class="subject-cell FRE"><input type="text" value=""></td>
+                        <td class="subject-cell FRE"><input type="text" value=""></td>
+                        <td class="subject-cell FRE"><input type="text" value=""></td>
+                        <td class="subject-cell FRE"><input type="text" value=""></td>
+                        <td class="subject-cell FRE"><input type="text" value=""></td>
+                        <td class="subject-cell FRE"><input type="text" value=""></td>
+                        
+                        <!-- German -->
+                        <td class="subject-cell GER"><input type="text" value=""></td>
+                        <td class="subject-cell GER"><input type="text" value=""></td>
+                        <td class="subject-cell GER"><input type="text" value=""></td>
+                        <td class="subject-cell GER"><input type="text" value=""></td>
+                        <td class="subject-cell GER"><input type="text" value=""></td>
+                        <td class="subject-cell GER"><input type="text" value=""></td>
+                        <td class="subject-cell GER"><input type="text" value=""></td>
+                        
+                        <!-- Dhopadhola -->
+                        <td class="subject-cell DHO"><input type="text" value=""></td>
+                        <td class="subject-cell DHO"><input type="text" value=""></td>
+                        <td class="subject-cell DHO"><input type="text" value=""></td>
+                        <td class="subject-cell DHO"><input type="text" value=""></td>
+                        <td class="subject-cell DHO"><input type="text" value=""></td>
+                        <td class="subject-cell DHO"><input type="text" value=""></td>
+                        <td class="subject-cell DHO"><input type="text" value=""></td>
+                    </tr>
+                    <!-- Additional rows would follow the same pattern -->
+                </tbody>
+            </table>
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+let currentData = [];
+let hasChanges = false;
+
+// Function to update current data when a cell is edited
+document.addEventListener('DOMContentLoaded', function() {
+    const classSelect = document.getElementById('classSelect');
+    const streamSelect = document.getElementById('streamSelect');
+    const loadDataBtn = document.getElementById('loadDataBtn');
+    const addRowBtn = document.getElementById('addRowBtn');
+    const exportExcelBtn = document.getElementById('exportExcelBtn');
+
+    // Load streams when class is selected
+    classSelect.addEventListener('change', function() {
+        const classLevel = this.value;
+        if (classLevel) {
+            fetch(`/api/streams/${classLevel}`)
+                .then(response => response.json())
+                .then(streams => {
+                    streamSelect.innerHTML = '<option value="">Choose Stream</option>';
+                    streams.forEach(stream => {
+                        streamSelect.innerHTML += `<option value="${stream}">${stream}</option>`;
+                    });
+                });
+        } else {
+            streamSelect.innerHTML = '<option value="">Choose Stream</option>';
+        }
+    });
+
+    // Load data
+    loadDataBtn.addEventListener('click', function() {
+        const year = document.getElementById('yearSelect').value;
+        const term = document.getElementById('termSelect').value;
+        const classLevel = document.getElementById('classSelect').value;
+        const stream = document.getElementById('streamSelect').value;
+
+        if (!year || !term || !classLevel || !stream) {
+            alert('Please select year, term, class, and stream');
+            return;
+        }
+
+        fetch('/api/load_data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                year: year,
+                term: term,
+                class: classLevel,
+                stream: stream
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            currentData = data;
+            renderTable(data);
+            hasChanges = false;
+            saveDataBtn.disabled = true;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error loading data');
+        });
+    });
+
+    // Save data
+    //document.addEventListener('DOMContentLoaded', function () {
+        const saveDataButton = document.getElementById('saveDataBtn');
+    
+        saveDataButton.addEventListener('click', function () {
+            console.log('Save Data button clicked');
+            const classLevel = document.getElementById('classSelect').value;
+    
+            if (!classLevel) {
+                alert('Please select a class before saving data.');
+                return;
+            }
+    
+            const table = document.getElementById('gradesTable');
+            const rows = table.querySelectorAll('tbody tr');
+            const students = [];
+    
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const student = {
+                    std_no: cells[0].innerText.trim(),
+                    sdt_name: cells[1].innerText.trim(),
+                    class_level: cells[2].innerText.trim(),
+                    stream: cells[3].innerText.trim(),
+                    year: cells[4].innerText.trim(),
+                    term: cells[5].innerText.trim(),
+                    gender: cells[6].innerText.trim(),
+                    section: cells[7].innerText.trim(),
+                    eng1: cells[8].querySelector('input').value.trim(),
+                    eng2: cells[9].querySelector('input').value.trim(),
+                    eng3: cells[10].querySelector('input').value.trim(),
+                    eng4: cells[11].querySelector('input').value.trim(),
+                    engBOT: cells[12].querySelector('input').value.trim(),
+                    engMOT: cells[13].querySelector('input').value.trim(),
+                    engEOT: cells[14].querySelector('input').value.trim(),
+                    mtc1: cells[15].querySelector('input').value.trim(),
+                    mtc2: cells[16].querySelector('input').value.trim(),
+                    mtc3: cells[17].querySelector('input').value.trim(),
+                    mtc4: cells[18].querySelector('input').value.trim(),
+                    mtcBOT: cells[19].querySelector('input').value.trim(),
+                    mtcMOT: cells[20].querySelector('input').value.trim(),
+                    mtcEOT: cells[21].querySelector('input').value.trim(),
+                    bio1: cells[22].querySelector('input').value.trim(),
+                    bio2: cells[23].querySelector('input').value.trim(),
+                    bio3: cells[24].querySelector('input').value.trim(),
+                    bio4: cells[25].querySelector('input').value.trim(),
+                    bioBOT: cells[26].querySelector('input').value.trim(),
+                    bioMOT: cells[27].querySelector('input').value.trim(),
+                    bioEOT: cells[28].querySelector('input').value.trim(),
+                    phy1: cells[29].querySelector('input').value.trim(),
+                    phy2: cells[30].querySelector('input').value.trim(),
+                    phy3: cells[31].querySelector('input').value.trim(),
+                    phy4: cells[32].querySelector('input').value.trim(),
+                    phyBOT: cells[33].querySelector('input').value.trim(),
+                    phyMOT: cells[34].querySelector('input').value.trim(),
+                    phyEOT: cells[35].querySelector('input').value.trim(),
+                    geo1: cells[36].querySelector('input').value.trim(),
+                    geo2: cells[37].querySelector('input').value.trim(),
+                    geo3: cells[38].querySelector('input').value.trim(),
+                    geo4: cells[39].querySelector('input').value.trim(),
+                    geoBOT: cells[40].querySelector('input').value.trim(),
+                    geoMOT: cells[41].querySelector('input').value.trim(),
+                    geoEOT: cells[42].querySelector('input').value.trim(),
+                    his1: cells[43].querySelector('input').value.trim(),
+                    his2: cells[44].querySelector('input').value.trim(),
+                    his3: cells[45].querySelector('input').value.trim(),
+                    his4: cells[46].querySelector('input').value.trim(),
+                    hisBOT: cells[47].querySelector('input').value.trim(),
+                    hisMOT: cells[48].querySelector('input').value.trim(),
+                    hisEOT: cells[49].querySelector('input').value.trim(),  
+                    che1: cells[50].querySelector('input').value.trim(),
+                    che2: cells[51].querySelector('input').value.trim(),
+                    che3: cells[52].querySelector('input').value.trim(),
+                    che4: cells[53].querySelector('input').value.trim(),
+                    cheBOT: cells[54].querySelector('input').value.trim(),
+                    cheMOT: cells[55].querySelector('input').value.trim(),
+                    cheEOT: cells[56].querySelector('input').value.trim(),
+                    ict1: cells[57].querySelector('input').value.trim(),
+                    ict2: cells[58].querySelector('input').value.trim(),
+                    ict3: cells[59].querySelector('input').value.trim(),
+                    ict4: cells[60].querySelector('input').value.trim(),
+                    ictBOT: cells[61].querySelector('input').value.trim(),
+                    ictMOT: cells[62].querySelector('input').value.trim(),
+                    ictEOT: cells[63].querySelector('input').value.trim(),
+                    ent1: cells[64].querySelector('input').value.trim(),
+                    ent2: cells[65].querySelector('input').value.trim(),
+                    ent3: cells[66].querySelector('input').value.trim(),
+                    ent4: cells[67].querySelector('input').value.trim(),
+                    entBOT: cells[68].querySelector('input').value.trim(),
+                    entMOT: cells[69].querySelector('input').value.trim(),
+                    entEOT: cells[70].querySelector('input').value.trim(),
+                    cre1: cells[71].querySelector('input').value.trim(),
+                    cre2: cells[72].querySelector('input').value.trim(),
+                    cre3: cells[73].querySelector('input').value.trim(),
+                    cre4: cells[74].querySelector('input').value.trim(),
+                    creBOT: cells[75].querySelector('input').value.trim(),
+                    creMOT: cells[76].querySelector('input').value.trim(),
+                    creEOT: cells[77].querySelector('input').value.trim(),
+                    agr1: cells[78].querySelector('input').value.trim(),
+                    agr2: cells[79].querySelector('input').value.trim(),
+                    agr3: cells[80].querySelector('input').value.trim(),
+                    agr4: cells[81].querySelector('input').value.trim(),
+                    agrBOT: cells[82].querySelector('input').value.trim(),
+                    agrMOT: cells[83].querySelector('input').value.trim(),
+                    agrEOT: cells[84].querySelector('input').value.trim(),
+                    phe1: cells[85].querySelector('input').value.trim(),
+                    phe2: cells[86].querySelector('input').value.trim(),
+                    phe3: cells[87].querySelector('input').value.trim(),
+                    phe4: cells[88].querySelector('input').value.trim(),
+                    pheBOT: cells[89].querySelector('input').value.trim(),
+                    pheMOT: cells[90].querySelector('input').value.trim(),
+                    pheEOT: cells[91].querySelector('input').value.trim(),
+                    kis1: cells[92].querySelector('input').value.trim(),
+                    kis2: cells[93].querySelector('input').value.trim(),
+                    kis3: cells[94].querySelector('input').value.trim(),
+                    kis4: cells[95].querySelector('input').value.trim(),
+                    kisBOT: cells[96].querySelector('input').value.trim(),
+                    kisMOT: cells[97].querySelector('input').value.trim(),
+                    kisEOT: cells[98].querySelector('input').value.trim(),
+                    art1: cells[99].querySelector('input').value.trim(),
+                    art2: cells[100].querySelector('input').value.trim(),
+                    art3: cells[101].querySelector('input').value.trim(),
+                    art4: cells[102].querySelector('input').value.trim(),
+                    artBOT: cells[103].querySelector('input').value.trim(),
+                    artMOT: cells[104].querySelector('input').value.trim(),
+                    artEOT: cells[105].querySelector('input').value.trim(),
+                    ire1: cells[106].querySelector('input').value.trim(),
+                    ire2: cells[107].querySelector('input').value.trim(),
+                    ire3: cells[108].querySelector('input').value.trim(),
+                    ire4: cells[109].querySelector('input').value.trim(),
+                    ireBOT: cells[110].querySelector('input').value.trim(),
+                    ireMOT: cells[111].querySelector('input').value.trim(),
+                    ireEOT: cells[112].querySelector('input').value.trim(),
+                    lit1: cells[113].querySelector('input').value.trim(),
+                    lit2: cells[114].querySelector('input').value.trim(),
+                    lit3: cells[115].querySelector('input').value.trim(),
+                    lit4: cells[116].querySelector('input').value.trim(),
+                    litBOT: cells[117].querySelector('input').value.trim(),
+                    litMOT: cells[118].querySelector('input').value.trim(),
+                    litEOT: cells[119].querySelector('input').value.trim(),
+                    tad1: cells[120].querySelector('input').value.trim(),
+                    tad2: cells[121].querySelector('input').value.trim(),
+                    tad3: cells[122].querySelector('input').value.trim(),
+                    tad4: cells[123].querySelector('input').value.trim(),
+                    tadBOT: cells[124].querySelector('input').value.trim(),
+                    tadMOT: cells[125].querySelector('input').value.trim(),
+                    tadEOT: cells[126].querySelector('input').value.trim(),
+                    fsn1: cells[127].querySelector('input').value.trim(),
+                    fsn2: cells[128].querySelector('input').value.trim(),
+                    fsn3: cells[129].querySelector('input').value.trim(),
+                    fsn4: cells[130].querySelector('input').value.trim(),
+                    fsnBOT: cells[131].querySelector('input').value.trim(),
+                    fsnMOT: cells[132].querySelector('input').value.trim(),
+                    fsnEOT: cells[133].querySelector('input').value.trim(),
+                    lat1: cells[134].querySelector('input').value.trim(),
+                    lat2: cells[135].querySelector('input').value.trim(),
+                    lat3: cells[136].querySelector('input').value.trim(),
+                    lat4: cells[137].querySelector('input').value.trim(),
+                    latBOT: cells[138].querySelector('input').value.trim(),
+                    latMOT: cells[139].querySelector('input').value.trim(),
+                    latEOT: cells[140].querySelector('input').value.trim(),
+                    ate1: cells[141].querySelector('input').value.trim(),
+                    ate2: cells[142].querySelector('input').value.trim(),
+                    ate3: cells[143].querySelector('input').value.trim(),
+                    ate4: cells[144].querySelector('input').value.trim(),
+                    ateBOT: cells[145].querySelector('input').value.trim(),
+                    ateMOT: cells[146].querySelector('input').value.trim(),
+                    ateEOT: cells[147].querySelector('input').value.trim(),
+                    lum1: cells[148].querySelector('input').value.trim(),
+                    lum2: cells[149].querySelector('input').value.trim(),
+                    lum3: cells[150].querySelector('input').value.trim(),
+                    lum4: cells[151].querySelector('input').value.trim(),
+                    lumBOT: cells[152].querySelector('input').value.trim(),
+                    lumMOT: cells[153].querySelector('input').value.trim(),
+                    lumEOT: cells[154].querySelector('input').value.trim(),
+                    lug1: cells[155].querySelector('input').value.trim(),
+                    lug2: cells[156].querySelector('input').value.trim(),
+                    lug3: cells[157].querySelector('input').value.trim(),
+                    lug4: cells[158].querySelector('input').value.trim(),
+                    lugBOT: cells[159].querySelector('input').value.trim(),
+                    lugMOT: cells[160].querySelector('input').value.trim(),
+                    lugEOT: cells[161].querySelector('input').value.trim(),
+                    lus1: cells[162].querySelector('input').value.trim(),
+                    lus2: cells[163].querySelector('input').value.trim(),
+                    lus3: cells[164].querySelector('input').value.trim(),
+                    lus4: cells[165].querySelector('input').value.trim(),
+                    lusBOT: cells[166].querySelector('input').value.trim(),
+                    lusMOT: cells[167].querySelector('input').value.trim(),
+                    lusEOT: cells[168].querySelector('input').value.trim(),
+                    lba1: cells[169].querySelector('input').value.trim(),
+                    lba2: cells[170].querySelector('input').value.trim(),
+                    lba3: cells[171].querySelector('input').value.trim(),
+                    lba4: cells[172].querySelector('input').value.trim(),
+                    lbaBOT: cells[173].querySelector('input').value.trim(),
+                    lbaMOT: cells[174].querySelector('input').value.trim(),
+                    lbaEOT: cells[175].querySelector('input').value.trim(),
+                    lbl1: cells[176].querySelector('input').value.trim(),
+                    lbl2: cells[177].querySelector('input').value.trim(),
+                    lbl3: cells[178].querySelector('input').value.trim(),
+                    lbl4: cells[179].querySelector('input').value.trim(),
+                    lblBOT: cells[180].querySelector('input').value.trim(),
+                    lblMOT: cells[181].querySelector('input').value.trim(),
+                    lblEOT: cells[182].querySelector('input').value.trim(),
+                    run1: cells[183].querySelector('input').value.trim(),
+                    run2: cells[184].querySelector('input').value.trim(),
+                    run3: cells[185].querySelector('input').value.trim(),
+                    run4: cells[186].querySelector('input').value.trim(),
+                    runBOT: cells[187].querySelector('input').value.trim(),
+                    runMOT: cells[188].querySelector('input').value.trim(),
+                    runEOT: cells[189].querySelector('input').value.trim(),
+                    rut1: cells[190].querySelector('input').value.trim(),
+                    rut2: cells[191].querySelector('input').value.trim(),
+                    rut3: cells[192].querySelector('input').value.trim(),
+                    rut4: cells[193].querySelector('input').value.trim(),
+                    rutBOT: cells[194].querySelector('input').value.trim(),
+                    rutMOT: cells[195].querySelector('input').value.trim(),
+                    rutEOT: cells[196].querySelector('input').value.trim(),
+                    fre1: cells[197].querySelector('input').value.trim(),
+                    fre2: cells[198].querySelector('input').value.trim(),
+                    fre3: cells[199].querySelector('input').value.trim(),
+                    fre4: cells[200].querySelector('input').value.trim(),
+                    freBOT: cells[201].querySelector('input').value.trim(),
+                    freMOT: cells[202].querySelector('input').value.trim(),
+                    freEOT: cells[203].querySelector('input').value.trim(),
+                    ger1: cells[204].querySelector('input').value.trim(),
+                    ger2: cells[205].querySelector('input').value.trim(),
+                    ger3: cells[206].querySelector('input').value.trim(),
+                    ger4: cells[207].querySelector('input').value.trim(),
+                    gerBOT: cells[208].querySelector('input').value.trim(),
+                    gerMOT: cells[209].querySelector('input').value.trim(),
+                    gerEOT: cells[210].querySelector('input').value.trim(),
+                    dho1: cells[211].querySelector('input').value.trim(),
+                    dho2: cells[212].querySelector('input').value.trim(),
+                    dho3: cells[213].querySelector('input').value.trim(),
+                    dho4: cells[214].querySelector('input').value.trim(),
+                    dhoBOT: cells[215].querySelector('input').value.trim(),
+                    dhoMOT: cells[216].querySelector('input').value.trim(),
+                    dhoEOT: cells[217].querySelector('input').value.trim(),
+                    // Add other subjects similarly...
+                };
+                students.push(student);
+            });
+    
+            fetch('/api/save_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    class: classLevel,
+                    students: students,
+                }),
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('Data saved successfully');
+                    } else {
+                        alert('Error saving data: ' + result.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error saving data');
+                });
+        });
+    
+        // Activate the save button
+        //saveDataButton.disabled = false;
+    //});
+
+
+    
+    // Add row
+    addRowBtn.addEventListener('click', function() {
+        const year = document.getElementById('yearSelect').value;
+        const term = document.getElementById('termSelect').value;
+        const classLevel = document.getElementById('classSelect').value;
+        const stream = document.getElementById('streamSelect').value;
+
+        if (!year || !term || !classLevel || !stream) {
+            alert('Please select year, term, class, and stream first');
+            return;
+        }
+
+        const newRow = {
+            id: Date.now(), // Temporary ID
+            std_no: '',
+            sdt_name: '',
+            class_level: classLevel,
+            stream: stream,
+            year: year,
+            term: term,
+            gender: '',
+            section: '',
+            eng1_bot: '', eng1_mot: '', eng1_eot: '',
+            eng2_bot: '', eng2_mot: '', eng2_eot: '',
+            math_bot: '', math_mot: '', math_eot: '',
+            biology_bot: '', biology_mot: '', biology_eot: '',
+            physics_bot: '', physics_mot: '', physics_eot: '',
+            chemistry_bot: '', chemistry_mot: '', chemistry_eot: '',
+            geography_bot: '', geography_mot: '', geography_eot: '',
+            history_bot: '', history_mot: '', history_eot: '',
+            entrepreneurship_bot: '', entrepreneurship_mot: '', entrepreneurship_eot: '',
+            cre_bot: '', cre_mot: '', cre_eot: '',
+            ict_bot: '', ict_mot: '', ict_eot: '',
+            agriculture_bot: '', agriculture_mot: '', agriculture_eot: '',
+            art_bot: '', art_mot: '', art_eot: '',
+            kiswahili_bot: '', kiswahili_mot: '', kiswahili_eot: '',
+            pe_bot: '', pe_mot: '', pe_eot: '',
+            literature_bot: '', literature_mot: '', literature_eot: ''
+        };
+
+        currentData.push(newRow);
+        renderTable(currentata);
+        hasChanges = true;
+        saveDataBtn.disabled = false;
+    });
+
+
+
+    // Export to Excel
+    exportExcelBtn.addEventListener('click', function() {
+        const year = document.getElementById('yearSelect').value;
+        const term = document.getElementById('termSelect').value;
+        const classLevel = document.getElementById('classSelect').value;
+        const stream = document.getElementById('streamSelect').value;
+
+        if (!year || !term || !classLevel || !stream) {
+            alert('Please select year, term, class, and stream first');
+            return;
+        }
+
+        fetch('/api/export_excel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                year: year,
+                term: term,
+                class: classLevel,
+                stream: stream
+            })
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `${classLevel}_${stream}_${year}_${term}_marks.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error exporting data');
+        });
+    });
+});
+
+function renderTable(data) {
+    const tbody = document.getElementById('marksTableBody');
+    tbody.innerHTML = '';
+
+    data.forEach((student, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><input type="number" value="${student.std_no || ''}" onchange="updateData(${index}, 'std_no', this.value)"></td>
+            <td><input type="text" value="${student.sdt_name || ''}" onchange="updateData(${index}, 'sdt_name', this.value)"></td>
+            <td>${student.class_level}</td>
+            <td>${student.stream}</td>
+            <td>${student.year}</td>
+            <td>${student.term}</td>
+            <td><select onchange="updateData(${index}, 'gender', this.value)">
+                <option value="">-</option>
+                <option value="M" ${student.gender === 'M' ? 'selected' : ''}>M</option>
+                <option value="F" ${student.gender === 'F' ? 'selected' : ''}>F</option>
+            </select></td>
+            <td><input type="text" value="${student.section || ''}" onchange="updateData(${index}, 'section', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.eng1_bot || ''}" onchange="updateData(${index}, 'eng1_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.eng1_mot || ''}" onchange="updateData(${index}, 'eng1_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.eng1_eot || ''}" onchange="updateData(${index}, 'eng1_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.eng2_bot || ''}" onchange="updateData(${index}, 'eng2_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.eng2_mot || ''}" onchange="updateData(${index}, 'eng2_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.eng2_eot || ''}" onchange="updateData(${index}, 'eng2_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.math_bot || ''}" onchange="updateData(${index}, 'math_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.math_mot || ''}" onchange="updateData(${index}, 'math_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.math_eot || ''}" onchange="updateData(${index}, 'math_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.biology_bot || ''}" onchange="updateData(${index}, 'biology_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.biology_mot || ''}" onchange="updateData(${index}, 'biology_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.biology_eot || ''}" onchange="updateData(${index}, 'biology_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.physics_bot || ''}" onchange="updateData(${index}, 'physics_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.physics_mot || ''}" onchange="updateData(${index}, 'physics_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.physics_eot || ''}" onchange="updateData(${index}, 'physics_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.chemistry_bot || ''}" onchange="updateData(${index}, 'chemistry_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.chemistry_mot || ''}" onchange="updateData(${index}, 'chemistry_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.chemistry_eot || ''}" onchange="updateData(${index}, 'chemistry_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.geography_bot || ''}" onchange="updateData(${index}, 'geography_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.geography_mot || ''}" onchange="updateData(${index}, 'geography_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.geography_eot || ''}" onchange="updateData(${index}, 'geography_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.history_bot || ''}" onchange="updateData(${index}, 'history_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.history_mot || ''}" onchange="updateData(${index}, 'history_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.history_eot || ''}" onchange="updateData(${index}, 'history_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.entrepreneurship_bot || ''}" onchange="updateData(${index}, 'entrepreneurship_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.entrepreneurship_mot || ''}" onchange="updateData(${index}, 'entrepreneurship_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.entrepreneurship_eot || ''}" onchange="updateData(${index}, 'entrepreneurship_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.cre_bot || ''}" onchange="updateData(${index}, 'cre_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.cre_mot || ''}" onchange="updateData(${index}, 'cre_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.cre_eot || ''}" onchange="updateData(${index}, 'cre_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.ict_bot || ''}" onchange="updateData(${index}, 'ict_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.ict_mot || ''}" onchange="updateData(${index}, 'ict_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.ict_eot || ''}" onchange="updateData(${index}, 'ict_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.agriculture_bot || ''}" onchange="updateData(${index}, 'agriculture_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.agriculture_mot || ''}" onchange="updateData(${index}, 'agriculture_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.agriculture_eot || ''}" onchange="updateData(${index}, 'agriculture_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.art_bot || ''}" onchange="updateData(${index}, 'art_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.art_mot || ''}" onchange="updateData(${index}, 'art_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.art_eot || ''}" onchange="updateData(${index}, 'art_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.kiswahili_bot || ''}" onchange="updateData(${index}, 'kiswahili_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.kiswahili_mot || ''}" onchange="updateData(${index}, 'kiswahili_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.kiswahili_eot || ''}" onchange="updateData(${index}, 'kiswahili_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.pe_bot || ''}" onchange="updateData(${index}, 'pe_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.pe_mot || ''}" onchange="updateData(${index}, 'pe_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.pe_eot || ''}" onchange="updateData(${index}, 'pe_eot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.literature_bot || ''}" onchange="updateData(${index}, 'literature_bot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.literature_mot || ''}" onchange="updateData(${index}, 'literature_mot', this.value)"></td>
+            <td><input type="number" step="0.1" value="${student.literature_eot || ''}" onchange="updateData(${index}, 'literature_eot', this.value)"></td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function updateData(index, field, value) {
+    currentData[index][field] = value;
+    hasChanges = true;
+    document.getElementById('saveDataBtn').disabled = false;
+}
+
+function clearTable() {
+    document.getElementById('marksTableBody').innerHTML = '';
+    currentData = [];
+}
+
+//function to handle table newRow
+document.addEventListener('DOMContentLoaded', function() {
+    const subjectFilter = document.getElementById('subjectFilter');
+    const addRowBtn = document.getElementById('addRowBtn');
+    
+    // Filter subjects based on dropdown selection
+    subjectFilter.addEventListener('change', function() {
+        const selectedSubject = this.value;
+        const allSubjectCells = document.querySelectorAll('.subject-cell');
+        
+        allSubjectCells.forEach(cell => {
+            if (selectedSubject === 'all') {
+                cell.classList.remove('hidden');
+            } else {
+                if (cell.classList.contains(selectedSubject)) {
+                    cell.classList.remove('hidden');
+                } else {
+                    cell.classList.add('hidden');
+                }
+            }
+        });
+    });
+    
+    // Add new row to the table
+    addRowBtn.addEventListener('click', function() {
+        const tbody = document.querySelector('#gradesTable tbody');
+        const firstRow = tbody.querySelector('tr');
+        const newRow = document.createElement('tr');
+        
+        // Get default values from dropdowns
+        const year = document.getElementById('yearSelect').value;
+        const term = document.getElementById('termSelect').value;
+        const classLevel = document.getElementById('classSelect').value;
+        const stream = document.getElementById('streamSelect').value;
+    
+        // Clone the first row's structure but with empty values
+        newRow.innerHTML = firstRow.innerHTML.replace(/value="[^"]*"/g, 'value=""');
+    
+        // Set default values for year, class, term, and stream
+        newRow.querySelectorAll('td')[4].innerText = year; // Year column
+        newRow.querySelectorAll('td')[5].innerText = term; // Term column
+        newRow.querySelectorAll('td')[2].innerText = classLevel; // Class column
+        newRow.querySelectorAll('td')[3].innerText = stream; // Stream column
+    
+        // Add the new row to the table
+        tbody.appendChild(newRow);
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - School Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="user-info">
+            <h4><i class="fas fa-user"></i> Welcome, {{ session.full_name }}!</h4>
+            <p class="mb-0">Role: <span class="badge bg-primary">{{ session.role|title }}</span></p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+        <p class="text-muted">Quick access to system features</p>
+    </div>
+</div>
+
+<div class="row">
+    {% if session.role in ['admin', 'headteacher', 'teacher'] %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-edit fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Marks Entry</h5>
+                <p class="card-text">Enter and manage student marks for different subjects and terms.</p>
+                <a href="{{ url_for('marks_entry') }}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Enter Marks
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-file-alt fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Report Cards</h5>
+                <p class="card-text">Generate and print student report cards for different terms.</p>
+                <a href="{{ url_for('report_card') }}" class="btn btn-success">
+                    <i class="fas fa-file-alt"></i> Generate Reports
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if session.role in ['admin', 'librarian', 'headteacher'] %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-3x text-info mb-3"></i>
+                <h5 class="card-title">Library Management</h5>
+                <p class="card-text">Manage books, borrowing, and library operations.</p>
+                <a href="{{ url_for('library') }}" class="btn btn-info">
+                    <i class="fas fa-book"></i> Manage Library
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if session.role in ['admin', 'bursar', 'headteacher'] %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-money-bill fa-3x text-warning mb-3"></i>
+                <h5 class="card-title">Bursary Management</h5>
+                <p class="card-text">Manage school fees, payments, and financial records.</p>
+                <a href="{{ url_for('bursary') }}" class="btn btn-warning">
+                    <i class="fas fa-money-bill"></i> Manage Fees
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if session.role == 'admin' %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-cog fa-3x text-danger mb-3"></i>
+                <h5 class="card-title">Admin Panel</h5>
+                <p class="card-text">System administration, user management, and settings.</p>
+                <a href="{{ url_for('admin_panel') }}" class="btn btn-danger">
+                    <i class="fas fa-cog"></i> Admin Panel
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> System Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Your Access Level:</h6>
+                        <ul class="list-unstyled">
+                            {% if session.role == 'admin' %}
+                            <li><i class="fas fa-check text-success"></i> Full system access</li>
+                            <li><i class="fas fa-check text-success"></i> User management</li>
+                            <li><i class="fas fa-check text-success"></i> All modules</li>
+                            {% elif session.role == 'headteacher' %}
+                            <li><i class="fas fa-check text-success"></i> Academic management</li>
+                            <li><i class="fas fa-check text-success"></i> Reports and analytics</li>
+                            <li><i class="fas fa-check text-success"></i> Library and bursary access</li>
+                            {% elif session.role == 'teacher' %}
+                            <li><i class="fas fa-check text-success"></i> Marks entry</li>
+                            <li><i class="fas fa-check text-success"></i> Report generation</li>
+                            {% elif session.role == 'librarian' %}
+                            <li><i class="fas fa-check text-success"></i> Library management</li>
+                            <li><i class="fas fa-check text-success"></i> Book inventory</li>
+                            {% elif session.role == 'bursar' %}
+                            <li><i class="fas fa-check text-success"></i> Fees management</li>
+                            <li><i class="fas fa-check text-success"></i> Financial records</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Quick Tips:</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-lightbulb text-warning"></i> Use the navigation menu to access different modules</li>
+                            <li><i class="fas fa-lightbulb text-warning"></i> Your role determines which features you can access</li>
+                            <li><i class="fas fa-lightbulb text-warning"></i> Contact admin if you need additional permissions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
